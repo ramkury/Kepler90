@@ -11,7 +11,7 @@ Planet::~Planet()
 {
 }
 
-void Planet::tick()
+void Planet::Tick()
 {
 	rotation += rotation_speed;
 	if (rotation >= 360)
@@ -20,7 +20,7 @@ void Planet::tick()
 	}
 }
 
-void Planet::draw()
+void Planet::Draw()
 {
 	glPushMatrix();
 	glRotated(rotation, 0, 1, 0);
