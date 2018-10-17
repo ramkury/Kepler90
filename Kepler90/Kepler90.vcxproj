@@ -118,6 +118,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -126,6 +127,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Planet.h" />
     <ClInclude Include="Point.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

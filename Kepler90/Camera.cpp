@@ -23,6 +23,19 @@ void Camera::KeyboardSpecial(int key, int x, int y)
 PerspectiveCamera::PerspectiveCamera()
 {
 	pos.x = 0;
+	pos.y = 300;
+	pos.z = 000;
+
+	up.x = 0;
+	up.y = 1;
+	up.z = 0;
+
+	direction.x = 0;
+	direction.y = 0;
+	direction.z = 0;
+
+	angle = 45;
+	/*pos.x = 0;
 	pos.y = 80;
 	pos.z = 200;
 
@@ -34,7 +47,7 @@ PerspectiveCamera::PerspectiveCamera()
 	direction.y = 0;
 	direction.z = 0;
 
-	angle = 45;
+	angle = 45;*/
 }
 
 void PerspectiveCamera::Tick()

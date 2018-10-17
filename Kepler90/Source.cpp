@@ -1,12 +1,17 @@
+#define DOUBLE_BUFFERED
+
 #include <GL/glut.h>
 #include "Planet.h"
 #include "Camera.h"
+#include "Timer.h"
 
 GLfloat angle, fAspect;
 GLdouble obsX=0, obsY=0, obsZ=200;
 
-Planet planet1;
+Planet planet1(40, 0.01, 20);
+Planet planet2(40, 0.01, 20);
 Camera* activeCamera;
+Timer timer(1);
 
 void draw(void)
 {
@@ -16,7 +21,12 @@ void draw(void)
 
 	planet1.Draw();
 
+#ifdef DOUBLE_BUFFERED
 	glutSwapBuffers();
+#else
+	glFlush();
+#endif // DOUBLE_BUFFERED
+
 }
 
 // Initialize rendering parameters
@@ -24,46 +34,16 @@ void setup(void)
 {
 	activeCamera = new PerspectiveCamera();
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	angle = 45;
-	planet1.posX = planet1.posY = 0;
-	planet1.planet_radius = 20;
-	planet1.rotation = 0;
-	planet1.rotation_speed = 0.01;
 }
 
-// Função usada para especificar a posição do observador virtual
-//void PosicionaObservador(void)
-//{
-//	// Especifica sistema de coordenadas do modelo
-//	glMatrixMode(GL_MODELVIEW);
-//	// Inicializa sistema de coordenadas do modelo
-//	glLoadIdentity();
-//	// Especifica posição do observador e do alvo
-//	gluLookAt(0, 80, 200, 0, 0, 0, 0, 1, 0);
-//}
-
-// Função usada para especificar o volume de visualização
-//void EspecificaParametrosVisualizacao(void)
-//{
-//	// Especifica sistema de coordenadas de projeção
-//	glMatrixMode(GL_PROJECTION);
-//	// Inicializa sistema de coordenadas de projeção
-//	glLoadIdentity();
-//
-//	// Especifica a projeção perspectiva(angulo,aspecto,zMin,zMax)
-//	gluPerspective(angle, fAspect, 0.5, 500);
-//
-//	PosicionaObservador();
-//}
-
 // Função callback chamada quando o tamanho da janela é alterado 
-void AlteraTamanhoJanela(GLsizei w, GLsizei h)
+void OnWindowSizeChanged(GLsizei w, GLsizei h)
 {
 	activeCamera->OnWindowSizeChanged(w, h);
 }
 
 // Função callback chamada para gerenciar eventos do mouse
-void GerenciaMouse(int button, int state, int x, int y)
+void MouseEvent(int button, int state, int x, int y)
 {
 	activeCamera->OnMouseClick(button, state, x, y);
 	glutPostRedisplay();
@@ -78,22 +58,32 @@ void SpecialKeys(int key, int x, int y)
 
 void idle()
 {
-	planet1.Tick();
-	activeCamera->Tick();
-	glutPostRedisplay();
+	double time = timer.Tick();
+	if (time > 0)
+	{
+		planet1.Tick(time);
+		activeCamera->Tick();
+		glutPostRedisplay();
+	}
 }
 
 // Programa Principal
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
+
+#ifdef DOUBLE_BUFFERED
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+#else
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+#endif // DOUBLE_BUFFERED
+
 	glutInitWindowSize(900, 600);
 	glutCreateWindow("Kepler 90");
 	
 	glutDisplayFunc(draw);
-	glutReshapeFunc(AlteraTamanhoJanela);
-	glutMouseFunc(GerenciaMouse);
+	glutReshapeFunc(OnWindowSizeChanged);
+	glutMouseFunc(MouseEvent);
 	glutSpecialFunc(SpecialKeys);
 	glutIdleFunc(idle);
 	setup();

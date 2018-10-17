@@ -5,23 +5,22 @@
 class Planet
 {
 public:
-	Planet();
+	Planet(float orbital_radius, float orbital_period, float planet_radius);
 	~Planet();
 
-	void Tick();
+	void Tick(double time);
 	void Draw();
 
 //private:
 #pragma region Properties
-	float rotation_speed;
-	float translation_speed;
-	float planet_radius;
-	float orbit_radius;
+	const float rotation_speed;
+	const float orbital_speed;
+	const float planet_radius;
+	const float orbital_radius;
 #pragma endregion
 
 #pragma region State
-	float posX;
-	float posY;
+	float orbit_position;
 	float rotation;
 #pragma endregion
 
