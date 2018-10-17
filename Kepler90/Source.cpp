@@ -1,6 +1,7 @@
 #define DOUBLE_BUFFERED
 
 #include <GL/glut.h>
+#include <vector>
 #include "Planet.h"
 #include "Camera.h"
 #include "Timer.h"
@@ -8,10 +9,10 @@
 GLfloat angle, fAspect;
 GLdouble obsX=0, obsY=0, obsZ=200;
 
-Planet planet1(40, 0.01, 20);
-Planet planet2(40, 0.01, 20);
 Camera* activeCamera;
 Timer timer(1);
+
+std::vector<Planet> Planets;
 
 void draw(void)
 {
@@ -19,7 +20,10 @@ void draw(void)
 
 	glColor3f(0.0f, 0.0f, 1.0f);
 
-	planet1.Draw();
+	for (auto& planet : Planets)
+	{
+		planet.Draw();
+	}
 
 #ifdef DOUBLE_BUFFERED
 	glutSwapBuffers();
@@ -29,11 +33,27 @@ void draw(void)
 
 }
 
+void fillPlanets()
+{
+	Planets.reserve(8);
+	Planets.emplace_back(0.074,   7.0,  1.31);	// Kepler 90b
+	Planets.emplace_back(0.089,   8.7,  1.19);	// Kepler 90c
+	Planets.emplace_back(0.150,  14.4,  1.32);	// Kepler 90i (RADIUS UNDEFINED!!!!)
+	Planets.emplace_back(0.320,  59.7,  2.81);	// Kepler 90d
+	Planets.emplace_back(0.420,  91.9,  2.60);	// Kepler 90e
+	Planets.emplace_back(0.480, 124.9,  2.82);	// Kepler 90f
+	Planets.emplace_back(0.710, 210.6,  7.93);	// Kepler 90g
+	Planets.emplace_back(1.010, 331.6, 11.06);	// Kepler 90h
+
+}
+
 // Initialize rendering parameters
 void setup(void)
 {
 	activeCamera = new PerspectiveCamera();
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	fillPlanets();
 }
 
 // Função callback chamada quando o tamanho da janela é alterado 
@@ -61,7 +81,10 @@ void idle()
 	double time = timer.Tick();
 	if (time > 0)
 	{
-		planet1.Tick(time);
+		for (auto& planet : Planets)
+		{
+			planet.Tick(time);
+		}
 		activeCamera->Tick();
 		glutPostRedisplay();
 	}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GL/glut.h>
-#include "Point.h"
+#include "Structs.h"
 
 class Camera
 {
