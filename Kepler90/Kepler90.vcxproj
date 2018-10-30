@@ -118,6 +118,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Star.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Planet.h" />
+    <ClInclude Include="Star.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>

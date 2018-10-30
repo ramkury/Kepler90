@@ -1,7 +1,8 @@
 #include "Planet.h"
 
+double Planet::RADIUS_OFFSET;
 const double Planet::RADIUS_SCALE = 1.5;
-const double Planet::ORBITAL_RADIUS_SCALE = 110.0;
+const double Planet::ORBITAL_RADIUS_SCALE = 300.0;
 const double Planet::ORBITAL_SPEED_SCALE = 1100.0;
 
 
@@ -35,7 +36,7 @@ void Planet::Draw()
 {
 	glPushMatrix();
 	glRotated(-orbit_position, 0, 1, 0);
-	glTranslated(orbital_radius, 0, 0);
+	glTranslated(orbital_radius + RADIUS_OFFSET, 0, 0);
 	glRotated(rotation, 0, 1, 0);
 	glutWireSphere(planet_radius, 20, 20);
 	glPopMatrix();
