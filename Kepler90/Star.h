@@ -1,4 +1,6 @@
 #pragma once
+#include "Structs.h"
+
 class Star
 {
 public:
@@ -9,10 +11,10 @@ public:
 	void Tick(double time);
 	void Draw();
 
+	const double rotation_speed;
+	const double radius;
+	static const RGBColor color;
 private:
 	double rotation;
-
-	const double rotation_speed;
-	const double star_radius;
 };
 

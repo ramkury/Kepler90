@@ -39,14 +39,14 @@ void draw(void)
 void fillPlanets()
 {	
 	Planets.reserve(8); // 8 planets
-	Planets.emplace_back(0.074/* + orbit_offset */,   7.0,  1.31);	// Kepler 90b
-	Planets.emplace_back(0.089/* + orbit_offset */,   8.7,  1.19);	// Kepler 90c
-	Planets.emplace_back(0.150/* + orbit_offset */,  14.4,  1.32);	// Kepler 90i (RADIUS UNDEFINED!!!!)
-	Planets.emplace_back(0.320/* + orbit_offset */,  59.7,  2.81);	// Kepler 90d
-	Planets.emplace_back(0.420/* + orbit_offset */,  91.9,  2.60);	// Kepler 90e
-	Planets.emplace_back(0.480/* + orbit_offset */, 124.9,  2.82);	// Kepler 90f
-	Planets.emplace_back(0.710/* + orbit_offset */, 210.6,  7.93);	// Kepler 90g
-	Planets.emplace_back(1.010/* + orbit_offset */, 331.6, 11.06);	// Kepler 90h
+	Planets.emplace_back(0.074,   7.0,  1.31, star.radius, RGBColor(255, 255, 255));	// Kepler 90b
+	Planets.emplace_back(0.089,   8.7,  1.19, star.radius, RGBColor(255, 255, 255));	// Kepler 90c
+	Planets.emplace_back(0.150,  14.4,  1.32, star.radius, RGBColor(255, 255, 255));	// Kepler 90i (RADIUS UNDEFINED!!!!)
+	Planets.emplace_back(0.320,  59.7,  2.81, star.radius, RGBColor(255, 255, 255));	// Kepler 90d
+	Planets.emplace_back(0.420,  91.9,  2.60, star.radius, RGBColor(255, 255, 255));	// Kepler 90e
+	Planets.emplace_back(0.480, 124.9,  2.82, star.radius, RGBColor(255, 255, 255));	// Kepler 90f
+	Planets.emplace_back(0.710, 210.6,  7.93, star.radius, RGBColor(255, 255, 255));	// Kepler 90g
+	Planets.emplace_back(1.010, 331.6, 11.06, star.radius, RGBColor(255, 255, 255));	// Kepler 90h
 
 }
 

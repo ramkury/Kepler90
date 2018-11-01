@@ -11,7 +11,10 @@ struct Point3f
 
 struct RGBColor
 {
-	GLfloat r, g, b;
+	GLubyte r, g, b;
 	RGBColor() = default;
-	RGBColor(GLfloat r, GLfloat g, GLfloat b) : r(r), g(g), b(b) {}
+	RGBColor(GLubyte r, GLubyte g, GLubyte b) : r(r), g(g), b(b) {}
+	void set() const {
+		glColor3ub(r, g, b);
+	}
 };
