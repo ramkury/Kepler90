@@ -1,4 +1,8 @@
 #include "Camera.h"
+#include <cstdio>
+
+#define STEP_UP(value, increment, limit) (value) += (increment); if ((value) > (limit)) (value) = (limit);
+#define STEP_DOWN(value, decrement, limit) (value) -= (decrement); if ((value) < (limit)) (value) = (limit);
 
 GLfloat Camera::fAspect;
 
@@ -8,103 +12,86 @@ void Camera::OnWindowSizeChanged(GLsizei width, GLsizei height)
 
 	glViewport(0, 0, width, height);
 	fAspect = width / (float)height;
-
-	this->UpdateViewParameters();
-}
-
-void Camera::OnMouseClick(int button, int state, int x, int y)
-{
-}
-
-void Camera::KeyboardSpecial(int key, int x, int y)
-{
 }
 
 PerspectiveCamera::PerspectiveCamera()
 {
 	pos.x = 0;
 	pos.y = 300;
-	pos.z = 000;
-
-	up.x = 0;
-	up.y = 1;
-	up.z = 0;
-
-	direction.x = 0;
-	direction.y = 0;
-	direction.z = 0;
-
-	angle = 45;
-	/*pos.x = 0;
-	pos.y = 80;
-	pos.z = 200;
-
-	up.x = 0;
-	up.y = 1;
-	up.z = 0;
-
-	direction.x = 0;
-	direction.y = 0;
-	direction.z = 0;
-
-	angle = 45;*/
-}
-
-void PerspectiveCamera::Tick()
-{
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(pos.x, pos.y, pos.z, direction.x, direction.y, direction.z, up.x, up.y, up.z);
+	pos.z = 500;
 }
 
 void PerspectiveCamera::UpdateViewParameters()
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(angle, fAspect, 0.5, 500);
+	gluPerspective(55, fAspect, 100, 1300);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(pos.x, pos.y, pos.z, 0, 0, 0, 0, 1, 0);
 }
 
-void PerspectiveCamera::OnMouseClick(int button, int state, int x, int y)
+void PerspectiveCamera::OnMouseEvent(int button, int state, int x, int y)
 {
-	if (button == GLUT_LEFT_BUTTON)
-		if (state == GLUT_DOWN) {  // Zoom-in
-			if (angle >= 10) angle -= 5;
-		}
-	if (button == GLUT_RIGHT_BUTTON)
-		if (state == GLUT_DOWN) {  // Zoom-out
-			if (angle <= 130) angle += 5;
-		}
-	UpdateViewParameters();
 }
 
 void PerspectiveCamera::KeyboardSpecial(int key, int x, int y)
 {
-	switch (key) {
-	case GLUT_KEY_LEFT:
-		pos.x -= 10;
+	float step = 10;
+	switch (key)
+	{
+	case GLUT_KEY_UP: // Moves closer to the sun on Z axis
+		STEP_DOWN(pos.z, step, step);
 		break;
-	case GLUT_KEY_RIGHT:
-		pos.x += 10;
+	case GLUT_KEY_DOWN: // Moves away from the sun on Z axis
+		STEP_UP(pos.z, step, 750);
 		break;
-	case GLUT_KEY_UP:
-		pos.y += 10;
+	case GLUT_KEY_RIGHT: // Moves up on Y axis
+		STEP_UP(pos.y, step, 500);
 		break;
-	case GLUT_KEY_DOWN:
-		pos.y -= 10;
+	case GLUT_KEY_LEFT: // Moves down on Y axis
+		STEP_DOWN(pos.y, step, 0);
 		break;
-	case GLUT_KEY_HOME:
-		pos.z += 10;
-		break;
-	case GLUT_KEY_END:
-		pos.z -= 10;
+	default:
 		break;
 	}
-	Tick();
+
+	printf("Camera position: x = %.2f, y = %.2f, z = %.2f\n", pos.x, pos.y, pos.z);
 }
 
-Camera * Camera::operator=(Camera * cam)
+void PerspectiveCamera::Enable()
 {
-	cam->UpdateViewParameters();
-	return cam;
+	printf("Perspective camera enabled!\n");
 }
+
+PlanetCamera::PlanetCamera(const Planet & planet) : planet(planet)
+{
+}
+
+void PlanetCamera::UpdateViewParameters()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(55, fAspect, 0.1, 1300);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	Point3f pos = planet.GetPosition();
+	gluLookAt(pos.x, pos.y + planet.planet_radius + 1, pos.z, 0, 0, 0, 0, 1, 0);
+}
+
+void PlanetCamera::OnMouseEvent(int button, int state, int x, int y)
+{
+}
+
+void PlanetCamera::KeyboardSpecial(int key, int x, int y)
+{
+}
+
+void PlanetCamera::Enable()
+{
+	printf("Planet camera enabled!\n");
+}
+
 

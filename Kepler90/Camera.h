@@ -2,20 +2,17 @@
 
 #include <GL/glut.h>
 #include "Structs.h"
+#include "Planet.h"
 
 class Camera
 {
 public:
-	virtual void Tick() = 0;
 	virtual void UpdateViewParameters() = 0;
+	virtual void OnMouseEvent(int button, int state, int x, int y) = 0;
+	virtual void KeyboardSpecial(int key, int x, int y) = 0;
+	virtual void Enable() = 0;
 	virtual void OnWindowSizeChanged(GLsizei width, GLsizei height);
-	virtual void OnMouseClick(int button, int state, int x, int y);
-	virtual void KeyboardSpecial(int key, int x, int y);
-	Camera* operator=(Camera* cam);
 protected:
-	Point3f pos;
-	Point3f up;
-	Point3f direction;
 	static GLfloat fAspect;
 };
 
@@ -23,10 +20,22 @@ class PerspectiveCamera : public Camera
 {
 public:
 	PerspectiveCamera();
-	void Tick();
-	void UpdateViewParameters();
-	void OnMouseClick(int button, int state, int x, int y);
-	void KeyboardSpecial(int key, int x, int y);
+	void UpdateViewParameters() override;
+	void OnMouseEvent(int button, int state, int x, int y) override;
+	void KeyboardSpecial(int key, int x, int y) override;
+	void Enable() override;
 protected:
-	float angle;
+	Point3f pos;
+};
+
+class PlanetCamera : public Camera
+{
+public:
+	PlanetCamera(const Planet& planet);
+	void UpdateViewParameters() override;
+	void OnMouseEvent(int button, int state, int x, int y) override;
+	void KeyboardSpecial(int key, int x, int y) override;
+	void Enable() override;
+protected:
+	const Planet& planet;
 };

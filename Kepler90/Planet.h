@@ -16,6 +16,7 @@ public:
 
 	void Tick(double time);
 	void Draw();
+	Point3f GetPosition() const;
 
 	const RGBColor color;
 	static const double RADIUS_SCALE;

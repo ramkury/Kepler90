@@ -11,7 +11,7 @@ Star::Star(double radius) :
 
 void Star::Tick(double time)
 {
-	rotation += rotation_speed * time;
+	rotation -= rotation_speed * time;
 }
 
 void Star::Draw()
@@ -19,6 +19,6 @@ void Star::Draw()
 	glPushMatrix();
 	color.set();
 	glRotated(rotation, 0, 1, 0);
-	glutWireSphere(radius, 20, 20);
+	glutSolidSphere(radius, 20, 20);
 	glPopMatrix();
 }

@@ -1,5 +1,8 @@
 #include "Planet.h"
 #include "Structs.h"
+#include <cmath>
+
+#define DEG2RAD(deg) ((deg) * 0.01745)
 
 const double Planet::RADIUS_SCALE = 1.5;
 const double Planet::ORBITAL_RADIUS_SCALE = 300.0;
@@ -37,9 +40,19 @@ void Planet::Draw()
 {
 	color.set();
 	glPushMatrix();
-	glRotated(-orbit_position, 0, 1, 0);
+	glRotated(orbit_position, 0, 1, 0);
 	glTranslated(orbital_radius, 0, 0);
 	glRotated(rotation, 0, 1, 0);
-	glutWireSphere(planet_radius, 20, 20);
+	glutSolidSphere(planet_radius, 50, 50);
 	glPopMatrix();
+}
+
+Point3f Planet::GetPosition() const
+{
+	Point3f position;
+	double angle_rads = DEG2RAD(orbit_position);
+	position.x = (GLfloat) (cos(angle_rads) * orbital_radius);
+	position.y = 0;
+	position.z = (GLfloat) (sin(angle_rads) * -orbital_radius);
+	return position;
 }
