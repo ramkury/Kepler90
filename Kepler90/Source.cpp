@@ -11,7 +11,7 @@
 GLfloat angle, fAspect;
 GLdouble obsX=0, obsY=0, obsZ=200;
 
-std::array<Camera*, 3> cameras;
+std::array<Camera*, 2> cameras;
 Camera* activeCamera;
 Timer timer(1);
 
@@ -35,7 +35,6 @@ void setupCameras()
 {
 	cameras[0] = new PerspectiveCamera();
 	cameras[1] = new PlanetCamera(Planets.back());
-	cameras[2] = new FreeCamera(Point3f(100, 100, 100), Point3f(0, 0, 0));
 	activeCamera = cameras[0];
 	activeCamera->Enable();
 }
@@ -115,9 +114,9 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 
 #ifdef DOUBLE_BUFFERED
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 #else
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 #endif // DOUBLE_BUFFERED
 
 	glutInitWindowSize(900, 600);
