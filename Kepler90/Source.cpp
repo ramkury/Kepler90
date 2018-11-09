@@ -11,24 +11,33 @@
 GLfloat angle, fAspect;
 GLdouble obsX=0, obsY=0, obsZ=200;
 
-std::array<Camera*, 2> cameras;
+std::array<Camera*, 3> cameras;
 Camera* activeCamera;
 Timer timer(1);
 
 Star star(30);
 std::vector<Planet> Planets;
 
-void fillPlanets()
+void setupPlanets()
 {	
 	Planets.reserve(8); // 8 planets
-	Planets.emplace_back(0.074,   7.0,  1.31, star.radius, RGBColor(255, 255, 255));	// Kepler 90b
-	Planets.emplace_back(0.089,   8.7,  1.19, star.radius, RGBColor(255, 255, 255));	// Kepler 90c
-	Planets.emplace_back(0.150,  14.4,  1.32, star.radius, RGBColor(255, 255, 255));	// Kepler 90i (RADIUS UNDEFINED!!!!)
-	Planets.emplace_back(0.320,  59.7,  2.81, star.radius, RGBColor(255, 255, 255));	// Kepler 90d
-	Planets.emplace_back(0.420,  91.9,  2.60, star.radius, RGBColor(255, 255, 255));	// Kepler 90e
-	Planets.emplace_back(0.480, 124.9,  2.82, star.radius, RGBColor(255, 255, 255));	// Kepler 90f
-	Planets.emplace_back(0.710, 210.6,  7.93, star.radius, RGBColor(255, 255, 255));	// Kepler 90g
-	Planets.emplace_back(1.010, 331.6, 11.06, star.radius, RGBColor(255, 255, 255));	// Kepler 90h
+	Planets.emplace_back(0.074, 7.0, 1.31, star.radius, RGBColor(38, 133, 88));	// Kepler 90b
+	Planets.emplace_back(0.089, 8.7, 1.19, star.radius, RGBColor(148, 135, 18));	// Kepler 90c
+	Planets.emplace_back(0.150, 14.4, 1.32, star.radius, RGBColor(102, 228, 175));	// Kepler 90i (RADIUS UNDEFINED!!!!)
+	Planets.emplace_back(0.320, 59.7, 2.81, star.radius, RGBColor(189, 52, 171));	// Kepler 90d
+	Planets.emplace_back(0.420, 91.9, 2.60, star.radius, RGBColor(16, 90, 214));	// Kepler 90e
+	Planets.emplace_back(0.480, 124.9, 2.82, star.radius, RGBColor(194, 119, 69));	// Kepler 90f
+	Planets.emplace_back(0.710, 210.6, 7.93, star.radius, RGBColor(23, 218, 174));	// Kepler 90g
+	Planets.emplace_back(1.010, 331.6, 11.06, star.radius, RGBColor(146, 156, 238));	// Kepler 90h
+}
+
+void setupCameras()
+{
+	cameras[0] = new PerspectiveCamera();
+	cameras[1] = new PlanetCamera(Planets.back());
+	cameras[2] = new FreeCamera(Point3f(100, 100, 100), Point3f(0, 0, 0));
+	activeCamera = cameras[0];
+	activeCamera->Enable();
 }
 
 void draw(void)
@@ -42,11 +51,11 @@ void draw(void)
 		planet.Draw();
 	}
 
-#ifdef DOUBLE_BUFFERED
-	glutSwapBuffers();
-#else
-	glFlush();
-#endif // DOUBLE_BUFFERED
+	#ifdef DOUBLE_BUFFERED
+		glutSwapBuffers();
+	#else
+		glFlush();
+	#endif // DOUBLE_BUFFERED
 
 }
 
@@ -55,50 +64,38 @@ void setup(void)
 {
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	fillPlanets();
-	//activeCamera = new PerspectiveCamera();
-	cameras[0] = new PerspectiveCamera();
-	cameras[1] = new PlanetCamera(Planets.at(7));
-	activeCamera = cameras[0];
-	activeCamera->Enable();
+	setupPlanets();
+	setupCameras();
 }
 
-// Função callback chamada quando o tamanho da janela é alterado 
 void OnWindowSizeChanged(GLsizei w, GLsizei h)
 {
 	activeCamera->OnWindowSizeChanged(w, h);
 }
 
-// Função callback chamada para gerenciar eventos do mouse
 void MouseEvent(int button, int state, int x, int y)
 {
 	activeCamera->OnMouseEvent(button, state, x, y);
 }
 
-// Callback para gerenciar eventos do teclado para teclas especiais (F1, PgDn, entre outras)
-void SpecialKeys(int key, int x, int y)
+void KeyboardSpecial(int key, int x, int y)
 {
 	activeCamera->KeyboardSpecial(key, x, y);
 }
 
-void KeyboardFunc(unsigned char key, int x, int y)
+void Keyboard(unsigned char key, int x, int y)
 {
-	if (key == '1')
+	int num_key = key - 48;
+	if (num_key <= cameras.size() && num_key >= 1)
 	{
-		activeCamera = cameras[0];
-	}
-	else if (key == '2')
-	{
-		activeCamera = cameras[1];
-	}
-	else
-	{
+		activeCamera = cameras[num_key - 1];
+		activeCamera->Enable();
 		return;
 	}
-	activeCamera->Enable();
+	activeCamera->Keyboard(key, x, y);
 }
 
-void idle()
+void IdleFunc()
 {
 	double time = timer.Tick();
 	if (time > 0)
@@ -129,9 +126,15 @@ int main(int argc, char** argv)
 	glutDisplayFunc(draw);
 	glutReshapeFunc(OnWindowSizeChanged);
 	glutMouseFunc(MouseEvent);
-	glutSpecialFunc(SpecialKeys);
-	glutKeyboardFunc(KeyboardFunc);
-	glutIdleFunc(idle);
+	glutSpecialFunc(KeyboardSpecial);
+	glutKeyboardFunc(Keyboard);
+	glutIdleFunc(IdleFunc);
 	setup();
 	glutMainLoop();
+
+	for (auto c : cameras)
+	{
+		delete c;
+	}
+	return 0;
 }

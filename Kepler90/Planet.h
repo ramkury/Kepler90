@@ -15,7 +15,7 @@ public:
 	);
 
 	void Tick(double time);
-	void Draw();
+	void Draw() const;
 	Point3f GetPosition() const;
 
 	const RGBColor color;

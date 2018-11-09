@@ -2,6 +2,10 @@
 
 #include <GL/glut.h>
 
+#define STEP_UP(value, increment, limit) (value) += (increment); if ((value) > (limit)) (value) = (limit);
+#define STEP_DOWN(value, decrement, limit) (value) -= (decrement); if ((value) < (limit)) (value) = (limit);
+#define DEG2RAD(deg) ((deg) * 0.01745)
+
 struct Point3f
 {
 	GLfloat x, y, z;

@@ -2,11 +2,9 @@
 #include "Structs.h"
 #include <cmath>
 
-#define DEG2RAD(deg) ((deg) * 0.01745)
-
-const double Planet::RADIUS_SCALE = 1.5;
-const double Planet::ORBITAL_RADIUS_SCALE = 300.0;
-const double Planet::ORBITAL_SPEED_SCALE = 1100.0;
+const double Planet::RADIUS_SCALE = 2.5;
+const double Planet::ORBITAL_RADIUS_SCALE = 400.0;
+const double Planet::ORBITAL_SPEED_SCALE = 1200.0;
 
 
 Planet::Planet(double orbital_radius, double orbital_period, double planet_radius, double star_radius, RGBColor color) :
@@ -36,7 +34,7 @@ void Planet::Tick(double time)
 	}
 }
 
-void Planet::Draw()
+void Planet::Draw() const
 {
 	color.set();
 	glPushMatrix();

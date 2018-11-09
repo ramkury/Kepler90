@@ -11,6 +11,7 @@ public:
 	virtual void OnMouseEvent(int button, int state, int x, int y) = 0;
 	virtual void KeyboardSpecial(int key, int x, int y) = 0;
 	virtual void Enable() = 0;
+	virtual void Keyboard(unsigned char key, int x, int y);
 	virtual void OnWindowSizeChanged(GLsizei width, GLsizei height);
 protected:
 	static GLfloat fAspect;
@@ -38,4 +39,19 @@ public:
 	void Enable() override;
 protected:
 	const Planet& planet;
+};
+
+class FreeCamera : public Camera
+{
+public:
+	FreeCamera(Point3f starting_position, Point3f starting_direction);
+	void UpdateViewParameters() override;
+	void OnMouseEvent(int button, int state, int x, int y) override;
+	void KeyboardSpecial(int key, int x, int y) override;
+	void Keyboard(unsigned char key, int x, int y) override;
+	void Enable() override;
+
+	const Point3f starting_position, starting_direction;
+private:
+	Point3f position, direction;
 };
